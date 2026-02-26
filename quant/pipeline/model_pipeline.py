@@ -189,7 +189,7 @@ def run_model_comparison(
         available_models["TCN"] = (TCNModel, {"seq_len": 3, "n_epochs": 30})  # TCN needs seq_len > 1
         available_models["Localformer"] = (LocalformerModel, {"seq_len": 1, "n_epochs": 30})
         available_models["GAT"] = (GATModel, {"n_epochs": 30})  # GAT already sets seq_len=1
-    except ImportError as e:
+    except (ImportError, AttributeError) as e:
         if verbose:
             print(f"  MLX 深度模型加载失败: {e}")
 

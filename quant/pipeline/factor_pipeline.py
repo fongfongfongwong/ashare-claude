@@ -35,7 +35,7 @@ def _pandas_to_polars_ohlcv(data: dict) -> pl.LazyFrame:
 
     high_pd = close_pd * (1 + noise_h)
     low_pd = close_pd * (1 - noise_l)
-    open_pd = close_pd.shift(1).fillna(method="bfill")
+    open_pd = close_pd.shift(1).bfill()
     volume_pd = pd.DataFrame(
         np.random.lognormal(18, 1, close_pd.shape),
         index=dates,

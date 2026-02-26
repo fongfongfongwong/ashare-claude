@@ -34,17 +34,21 @@ from .tree_models import LGBMModel, XGBModel, CatModel, DoubleEnsembleModel
 # 线性模型
 from .linear_models import RidgeModel, ElasticNetModel
 
-# 深度学习模型 (MLX)
-from .mlx_models import (
-    MLPModel,
-    GRUModel,
-    LSTMModel,
-    ALSTMModel,
-    TransformerModel,
-    TCNModel,
-    LocalformerModel,
-    GATModel,
-)
+# 深度学习模型 (MLX) - only available on Apple Silicon
+try:
+    from .mlx_models import (
+        MLPModel,
+        GRUModel,
+        LSTMModel,
+        ALSTMModel,
+        TransformerModel,
+        TCNModel,
+        LocalformerModel,
+        GATModel,
+    )
+    _MLX_AVAILABLE = True
+except (ImportError, AttributeError):
+    _MLX_AVAILABLE = False
 
 # 集成模型
 from .ensemble import StackingEnsemble, BlendingEnsemble
@@ -60,16 +64,19 @@ MODEL_REGISTRY: dict[str, type[BaseModel]] = {
     # 线性模型
     "ridge": RidgeModel,
     "elastic_net": ElasticNetModel,
-    # 深度学习模型
-    "mlp": MLPModel,
-    "gru": GRUModel,
-    "lstm": LSTMModel,
-    "alstm": ALSTMModel,
-    "transformer": TransformerModel,
-    "tcn": TCNModel,
-    "localformer": LocalformerModel,
-    "gat": GATModel,
 }
+
+if _MLX_AVAILABLE:
+    MODEL_REGISTRY.update({
+        "mlp": MLPModel,
+        "gru": GRUModel,
+        "lstm": LSTMModel,
+        "alstm": ALSTMModel,
+        "transformer": TransformerModel,
+        "tcn": TCNModel,
+        "localformer": LocalformerModel,
+        "gat": GATModel,
+    })
 
 
 def get_model(name: str, **kwargs) -> BaseModel:
